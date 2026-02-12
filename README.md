@@ -6,3 +6,6 @@
 - Rodney Muyanga
 - Lukas Rønberg
 - Frederik Johannessen
+
+## Projektets indhold
+En CRUD appliakiton med flere typer databaser (SQL, graf og dokument) og en minimalistisk forntend, samt test af forskellig art. 
