@@ -15,7 +15,7 @@
 - [x] Opret tabeller med korrekte **datatyper**
 - [x] Definer **primary keys**
 - [x] Definer **foreign keys**
-- [x] Tilføj **constraints** (fx er der steder hvor der skal være NOT NULL)
+- [x] Tilføj **constraints** (fx er der steder hvor der skal være NOT NULL og TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
 - [ ] Verificer **referential integrity**
 
 ---
@@ -32,7 +32,6 @@
 - [ ] Opret **views**
 - [ ] Implementer **triggers** (inkl. til auditing)
 - [ ] Implementer **events**
-- [ ] Opret **brugere og rettigheder** (users & privileges)
 - [ ] Implementer **transaktioner** og dokumenter strukturen
 
 ---
