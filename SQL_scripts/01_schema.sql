@@ -36,9 +36,8 @@ CREATE TABLE app_user (
     last_name       VARCHAR(50)  NOT NULL,
     phone           VARCHAR(20),
     role_id         BIGINT       NOT NULL,
-    private_seller  BOOLEAN      DEFAULT TRUE,
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id)   REFERENCES role(id)
+    FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
 -- ADDRESS
@@ -80,7 +79,6 @@ CREATE TABLE car (
     year            INT             NOT NULL,
     mileage_km      INT             NOT NULL,
     color           VARCHAR(30),
-    description     TEXT,
     FOREIGN KEY (model_id)     REFERENCES model(id),
     FOREIGN KEY (fuel_type_id) REFERENCES fuel_type(id)
 );
@@ -92,9 +90,10 @@ CREATE TABLE car_listing (
     seller_id       BIGINT    NOT NULL,
     address_id      BIGINT    NOT NULL,
     is_sold         BOOLEAN   DEFAULT FALSE,
+	description     TEXT,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (car_id)    REFERENCES car(id),
-    FOREIGN KEY (seller_id) REFERENCES app_user(id),
+    FOREIGN KEY (car_id)     REFERENCES car(id),
+    FOREIGN KEY (seller_id)  REFERENCES app_user(id),
     FOREIGN KEY (address_id) REFERENCES address(id)
 );
 
@@ -122,3 +121,5 @@ CREATE TABLE message (
     FOREIGN KEY (receiver_id)    REFERENCES app_user(id),
     FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
 );
+
+
