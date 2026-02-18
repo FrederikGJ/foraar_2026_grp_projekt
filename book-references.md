@@ -1,6 +1,5 @@
 # Referencer
-Denne fil indeholder relevante sider, afsnit og begreber fra kursusbogen, 
-som er nyttige i forbindelse med projektets databasedesign og -implementering.
+Denne fil indeholder relevante sider, afsnit og begreber fra bøgerne.
 
 ## Billeder fra bogen
 
