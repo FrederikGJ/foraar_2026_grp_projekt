@@ -30,14 +30,14 @@
 - [ ] Implementer **stored functions**
 - [ ] Opret **indexes** for hurtigere queries
 - [ ] Opret **views**
-- [ ] Implementer **triggers** (inkl. til auditing)
+- [x] Implementer **triggers** (inkl. til auditing)
 - [ ] Implementer **events**
 - [ ] Implementer **transaktioner** og dokumenter strukturen
 
 ---
 
 ##  Sikkerhed & Auditing
-- [ ] Design og implementer **audit-struktur** med triggers
+- [x] Design og implementer **audit-struktur** med triggers
 
 ---
 
