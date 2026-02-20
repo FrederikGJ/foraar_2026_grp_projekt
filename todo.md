@@ -43,7 +43,7 @@
 
 ##  Rapport (relevante afsnit for denne opgave)
 - se herinde: https://docs.google.com/document/d/1xwfCfZgs5VEi_oZUOygBzpTVs0DZx22Lw1KsO2MZ7hY/edit?tab=t.0
-- og se Jira. 
+- og se Jira: https://rodmuyanga.atlassian.net/jira/software/projects/BPS/boards/34
 ---
 
 ##  Aflevering
