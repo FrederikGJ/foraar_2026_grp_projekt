@@ -5,7 +5,8 @@ Vi har valgt at lave active_listings, car_details, user_messages og user_favorit
 
 ## Sådan bruges et view 
 Man kan kalde dem som normale SQL queries, men hvor man anvender de views man har skabt - ligesom en normal tabel.
-
+```
 SELECT * FROM active_listings;
 SELECT * FROM active_listings WHERE brand = 'Toyota';
 SELECT * FROM user_favorites WHERE user_id = 1;
+```
