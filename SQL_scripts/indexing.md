@@ -11,4 +11,4 @@ Indexing tillader og at lave hurtigere opslag i vores SQL database - hvilket er 
 
 
 ## Ulemper 
-Det skal siges at indexing kan gøre nogle CRUD operationer langsommere fx INSERT, UPDATE og DELETE, da indexing skal opdateres efter 
+Det skal siges at indexing kan gøre nogle CRUD operationer langsommere fx INSERT, UPDATE og DELETE, da indexing skal opdateres efter operationerne.
