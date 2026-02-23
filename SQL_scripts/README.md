@@ -12,3 +12,6 @@ Denne mappe indheolder SQL scripts til projektet.
 
 ## Indexing 
 Klik her for at se note om indexing: [Indexing](indexing.md)
+
+## Views 
+Klik her for at se vores note om views og hvordan man bruger dem: [Views](views.md) 
