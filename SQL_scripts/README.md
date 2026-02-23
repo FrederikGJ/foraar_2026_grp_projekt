@@ -9,3 +9,6 @@ Denne mappe indheolder SQL scripts til projektet.
 ## Get the EER diagram 
 1. to see the EER diagram in MySQLWOrkbench go to Database tab in top of the app and click Reverse Engineer... (or Cmd + R on Mac)
 2. Follow the steps with the chosen DB 
+
+## Indexing 
+Klik her for at se note om indexing: [Indexing](indexing.md)
