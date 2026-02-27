@@ -9,3 +9,6 @@
 
 ## Projektets indhold
 En CRUD appliakiton med flere typer databaser (SQL, graf og dokument) og en minimalistisk forntend, samt test af forskellig art. 
+
+## SQL readme med oplysninger om database
+[SQL](SQL_scripts/README.md)
