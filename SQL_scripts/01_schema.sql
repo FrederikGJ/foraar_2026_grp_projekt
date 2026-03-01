@@ -97,6 +97,23 @@ CREATE TABLE car_listing (
     FOREIGN KEY (address_id) REFERENCES address(id)
 );
 
+
+CREATE TABLE car_sale (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    car_listing_id  BIGINT NOT NULL,
+    buyer_id        BIGINT NOT NULL,
+    sold_at         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_car_sale_listing
+      FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
+      ON DELETE CASCADE,
+
+    CONSTRAINT fk_car_sale_buyer
+      FOREIGN KEY (buyer_id) REFERENCES app_user(id),
+
+    UNIQUE (car_listing_id)
+);
+
 -- FAVORITES
 CREATE TABLE favorite (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
