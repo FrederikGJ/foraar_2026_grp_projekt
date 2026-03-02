@@ -28,7 +28,7 @@ CREATE TABLE region (
 );
 
 -- USERS
-CREATE TABLE app_user (
+ATE TABLE app_user (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     username        VARCHAR(50)  NOT NULL UNIQUE,
     email           VARCHAR(100) NOT NULL UNIQUE,
@@ -38,8 +38,10 @@ CREATE TABLE app_user (
     phone           VARCHAR(20),
     role_id         BIGINT       NOT NULL,
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (role_id) REFERENCES role(id)
 );
+
 
 -- ADDRESS
 CREATE TABLE address (
