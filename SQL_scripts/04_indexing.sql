@@ -15,8 +15,8 @@ CREATE INDEX idx_listing_created_at ON car_listing(created_at);
 CREATE INDEX idx_listing_car        ON car_listing(car_id);
 CREATE INDEX idx_listing_address    ON car_listing(address_id);
 
--- CAR_SALE: hurtigt opslag på om en annonce er solgt + køber-historik
-CREATE INDEX idx_car_sale_listing ON car_sale(car_listing_id);
+-- CAR_SALE: køber-historik og sortering på salgsdato
+-- idx_car_sale_listing er udeladt — dækkes allerede af UNIQUE(car_listing_id) i skemaet
 CREATE INDEX idx_car_sale_buyer   ON car_sale(buyer_id);
 CREATE INDEX idx_car_sale_sold_at ON car_sale(sold_at);
 
