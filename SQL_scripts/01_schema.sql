@@ -2,6 +2,7 @@
 -- BILBASEN CLONE - SCHEMA
 -- ============================================
 
+DROP TABLE IF EXISTS car_sale;
 DROP TABLE IF EXISTS message;
 DROP TABLE IF EXISTS favorite;
 DROP TABLE IF EXISTS car_listing;
@@ -84,19 +85,21 @@ CREATE TABLE car (
 );
 
 -- CAR LISTINGS
+-- is_sold er fjernet — kan udledes fra car_sale (3NF)
 CREATE TABLE car_listing (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     car_id          BIGINT    NOT NULL,
     seller_id       BIGINT    NOT NULL,
     address_id      BIGINT    NOT NULL,
-	description     TEXT,
+    description     TEXT,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (car_id)     REFERENCES car(id),
     FOREIGN KEY (seller_id)  REFERENCES app_user(id),
     FOREIGN KEY (address_id) REFERENCES address(id)
 );
 
-
+-- CAR SALES
+-- ON DELETE RESTRICT: listing kan ikke slettes hvis salg eksisterer → historik bevares
 CREATE TABLE car_sale (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     car_listing_id  BIGINT NOT NULL,
@@ -104,11 +107,11 @@ CREATE TABLE car_sale (
     sold_at         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_car_sale_listing
-       FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
-       ON DELETE RESTRICT
+        FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_car_sale_buyer
-      FOREIGN KEY (buyer_id) REFERENCES app_user(id),
+        FOREIGN KEY (buyer_id) REFERENCES app_user(id),
 
     UNIQUE (car_listing_id)
 );
@@ -137,5 +140,3 @@ CREATE TABLE message (
     FOREIGN KEY (receiver_id)    REFERENCES app_user(id),
     FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
 );
-
-
