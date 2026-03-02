@@ -89,7 +89,6 @@ CREATE TABLE car_listing (
     car_id          BIGINT    NOT NULL,
     seller_id       BIGINT    NOT NULL,
     address_id      BIGINT    NOT NULL,
-    is_sold         BOOLEAN   DEFAULT FALSE,
 	description     TEXT,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (car_id)     REFERENCES car(id),
@@ -105,8 +104,8 @@ CREATE TABLE car_sale (
     sold_at         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_car_sale_listing
-      FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
-      ON DELETE CASCADE,
+       FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
+       ON DELETE RESTRICT
 
     CONSTRAINT fk_car_sale_buyer
       FOREIGN KEY (buyer_id) REFERENCES app_user(id),
