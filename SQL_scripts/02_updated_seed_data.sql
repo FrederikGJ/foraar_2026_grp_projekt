@@ -555,7 +555,7 @@ INSERT INTO car (id, model_id, fuel_type_id, price, year, mileage_km, color) VAL
 (100,100,4,562300.00,2010,231100,'Gul');
 
 -- CAR LISTINGS (100)
-INSERT INTO car_listing (id, car_id, seller_id, address_id, is_sold, description, created_at) VALUES
+INSERT INTO car_listing (id, car_id, seller_id, address_id, description, created_at) VALUES
 (1,1,2,1,1,'Annonce 1: økonomisk bil med nyserviceret og automat gear – klar til prøvetur.',NOW()),
 (2,2,3,2,1,'Annonce 2: sporty bil med 1 ejer og bakkamera – klar i dag.',NOW()),
 (3,3,4,3,1,'Annonce 3: familievenlig bil med træk og LED forlygter – kan leveres hurtigt.',NOW()),
