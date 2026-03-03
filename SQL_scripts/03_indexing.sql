@@ -31,7 +31,7 @@ CREATE INDEX idx_car_model      ON car(model_id);       -- FK + filter
 -- CAR_LISTING: opslag på sælger, dato og bil
 CREATE INDEX idx_listing_seller     ON car_listing(seller_id);    -- FK + "mine annoncer"
 CREATE INDEX idx_listing_created_at ON car_listing(created_at);   -- sortering: nyeste først
-CREATE INDEX idx_listing_car        ON car_listing(car_id);       -- FK (sjældent søgt isoleret, men god praksis)
+CREATE INDEX idx_listing_car        ON car_listing(car_id);       
 CREATE INDEX idx_listing_address    ON car_listing(address_id);   -- FK + region-filter via JOIN
 
 -- CAR_SALE: køber-historik og salgsdato
