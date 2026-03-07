@@ -1,5 +1,5 @@
 -- ============================================
--- BILBASEN - VIEWS
+-- BILBASEN - VIEWS (opdateret: is_sold udledes fra car_sale)
 -- ============================================
 
 -- Alle aktive (ikke-solgte) annoncer med bil- og sælgerinfo
@@ -23,7 +23,9 @@ JOIN model      m  ON m.id  = c.model_id
 JOIN brand      b  ON b.id  = m.brand_id
 JOIN fuel_type  ft ON ft.id = c.fuel_type_id
 JOIN app_user   u  ON u.id  = cl.seller_id
-WHERE cl.is_sold = FALSE;
+WHERE NOT EXISTS (
+    SELECT 1 FROM car_sale cs WHERE cs.car_listing_id = cl.id
+);
 
 
 -- Fuld bilinfo samlet (brand + model + brændstof)
@@ -59,20 +61,22 @@ JOIN app_user   r  ON r.id = msg.receiver_id;
 
 
 -- En brugers gemte favoritter med bilinfo
+-- is_sold udledes via LEFT JOIN på car_sale
 CREATE VIEW user_favorites AS
 SELECT
     f.user_id,
     u.username,
-    cl.id           AS listing_id,
-    b.name          AS brand,
-    m.name          AS model,
+    cl.id               AS listing_id,
+    b.name              AS brand,
+    m.name              AS model,
     c.price,
     c.year,
     c.mileage_km,
-    cl.is_sold
-FROM favorite   f
-JOIN app_user   u  ON u.id  = f.user_id
-JOIN car_listing cl ON cl.id = f.car_listing_id
-JOIN car        c  ON c.id  = cl.car_id
-JOIN model      m  ON m.id  = c.model_id
-JOIN brand      b  ON b.id  = m.brand_id;
+    CASE WHEN cs.id IS NOT NULL THEN TRUE ELSE FALSE END AS is_sold
+FROM favorite       f
+JOIN app_user       u  ON u.id  = f.user_id
+JOIN car_listing    cl ON cl.id = f.car_listing_id
+JOIN car            c  ON c.id  = cl.car_id
+JOIN model          m  ON m.id  = c.model_id
+JOIN brand          b  ON b.id  = m.brand_id
+LEFT JOIN car_sale  cs ON cs.car_listing_id = cl.id;
