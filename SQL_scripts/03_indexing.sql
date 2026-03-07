@@ -1,26 +1,3 @@
--- ============================================
--- BILBASEN - INDEXES (renset og korrekt)
--- ============================================
---
--- UDELADT (dækkes allerede af eksisterende UNIQUE constraints):
---
---   app_user:    UNIQUE(username), UNIQUE(email)
---                → automatiske indexes, ingen ekstra nødvendige
---
---   brand:       UNIQUE(name)        → automatisk index
---   role:        UNIQUE(name)        → automatisk index
---   region:      UNIQUE(name)        → automatisk index
---   fuel_type:   UNIQUE(name)        → automatisk index
---
---   favorite:    UNIQUE(user_id, car_listing_id)
---                → komposit-index dækker venstre præfiks (user_id),
---                  så idx_favorite_user er REDUNDANT og udelades
---
---   car_sale:    UNIQUE(car_listing_id)
---                → automatisk index, idx_car_sale_listing udelades
---
--- ============================================
-
 -- CAR: filtrering og sortering i søgning
 CREATE INDEX idx_car_price      ON car(price);
 CREATE INDEX idx_car_year       ON car(year);
