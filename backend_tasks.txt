@@ -42,7 +42,7 @@ Pakke: dk.bilbase.backend
    - Verificeret: 10 JPA repos, ddl-auto: validate grøn
 
 
-[MANGLER] Trin 5 — Listings CRUD + sale-endpoint
+[FÆRDIG] Trin 5 — Listings CRUD + sale-endpoint
    - DTO'er (request + response)
    - ListingService med ownership-tjek
    - ListingController:
@@ -55,7 +55,7 @@ Pakke: dk.bilbase.backend
    - Erstatter stored procedure create_car_listing med Java @Transactional
 
 
-[MANGLER] Trin 6 — View-entities → read-only endpoints
+[FÆRDIG] Trin 6 — View-entities → read-only endpoints
    - @Immutable view-entities:
        ActiveListingView  → /api/listings/active
        CarDetailsView     → /api/cars
@@ -64,7 +64,7 @@ Pakke: dk.bilbase.backend
    - Read-only repositories
 
 
-[MANGLER] Trin 7 — Favorite + Message endpoints
+[FÆRDIG] Trin 7 — Favorite + Message endpoints
    - Favorite entity + repository
    - Message entity + repository
    - FavoriteService (pre-validate: listing ikke solgt — trigger backup)
@@ -79,13 +79,13 @@ Pakke: dk.bilbase.backend
        POST   /api/messages
 
 
-[MANGLER] Trin 8 — CarListingAudit admin-endpoint
+[FÆRDIG] Trin 8 — CarListingAudit admin-endpoint
    - CarListingAudit @Immutable entity (read-only — triggers fylder den)
    - AuditRepository
    - GET /api/admin/audit (kun ADMIN)
 
 
-[MANGLER] Trin 9 — Global exception handler + CORS + Swagger + README
+[FÆRDIG] Trin 9 — Global exception handler + CORS + Swagger + README
    - @ControllerAdvice:
        DataIntegrityViolationException     -> 409
        SQLState 45000 (trigger-fejl)       -> 400 + besked
@@ -97,7 +97,7 @@ Pakke: dk.bilbase.backend
    - Opdater backend/README.md med kør-instruktioner
 
 
-[MANGLER] Trin 10 — Tests
+[FÆRDIG] Trin 10 — Tests
    - Repository-tests mod docker-MySQL
    - MockMvc integration: register -> login -> protected call
    - Test at trigger-violations -> 400 (ikke 500)
@@ -105,5 +105,5 @@ Pakke: dk.bilbase.backend
 
 
 ============================================
-STATUS: 4 / 10 trin færdige
+STATUS: 10 / 10 trin færdige
 ============================================
