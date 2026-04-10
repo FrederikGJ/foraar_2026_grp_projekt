@@ -8,6 +8,8 @@ Denne mappe indheolder SQL scripts til projektet.
 4. Run the 03_indexing.sql
 5. Run the 04_views.sql 
 
+Osv osv fortsæt til du når til nummer 07
+
 ## Get the EER diagram 
 1. to see the EER diagram in MySQLWOrkbench go to Database tab in top of the app and click Reverse Engineer... (or Cmd + R on Mac)
 2. Follow the steps with the chosen DB 
