@@ -27,12 +27,17 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 
 @Service
 public class ListingService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final CarListingRepository listingRepo;
     private final CarRepository carRepo;
@@ -61,6 +66,7 @@ public class ListingService {
         this.fuelTypeRepo = fuelTypeRepo;
     }
 
+    @Transactional(readOnly = true)
     public Page<ListingResponse> findAll(String brand, String model, String fuelType,
                                          Integer yearFrom, Integer yearTo,
                                          BigDecimal priceFrom, BigDecimal priceTo,
@@ -78,6 +84,7 @@ public class ListingService {
         return listingRepo.findAll(spec, pageable).map(ListingResponse::from);
     }
 
+    @Transactional(readOnly = true)
     public ListingResponse findById(Long id) {
         CarListing listing = listingRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Listing not found: " + id));
@@ -156,8 +163,9 @@ public class ListingService {
 
         saleRepo.save(new CarSale(listing, buyer));
 
-        // Refresh listing to pick up the new sale
-        return ListingResponse.from(listingRepo.findById(listingId).orElseThrow());
+        // Refresh to pick up the new sale — first-level cache has listing with sale=null
+        entityManager.refresh(listing);
+        return ListingResponse.from(listing);
     }
 
     private void checkOwnership(CarListing listing, AppUserPrincipal principal) {

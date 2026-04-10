@@ -29,12 +29,14 @@ public class MessageService {
         this.listingRepo = listingRepo;
     }
 
+    @Transactional(readOnly = true)
     public List<MessageResponse> getInbox(Long userId) {
         return messageRepo.findByReceiverIdOrderBySentAtDesc(userId).stream()
                 .map(MessageResponse::from)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<MessageResponse> getOutbox(Long userId) {
         return messageRepo.findBySenderIdOrderBySentAtDesc(userId).stream()
                 .map(MessageResponse::from)

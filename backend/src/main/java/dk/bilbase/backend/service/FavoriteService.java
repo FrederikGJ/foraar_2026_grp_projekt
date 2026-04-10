@@ -31,6 +31,7 @@ public class FavoriteService {
         this.userRepo = userRepo;
     }
 
+    @Transactional(readOnly = true)
     public List<FavoriteResponse> getFavorites(Long userId) {
         return favoriteRepo.findByUserId(userId).stream()
                 .map(FavoriteResponse::from)
