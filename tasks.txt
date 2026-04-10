@@ -1,0 +1,18 @@
+restful api crud app
+
+Java and spring boot is the tech - lets build this
+
+Create a backend that will connect to your relational database.
+➢ Functionality:
+o CRUD (Create, Read, Update, Delete).
+o Login/logout – authentication and authorization (for example admin and normal 
+user)
+o The rest of the functionality depends on your business model
+➢ Use an ORM (Object Relationship Mapping) tool to map the database to your 
+application – for example Hibernate, Entity Framework, Sequelize, etc.
+➢ You can also try native queries.
+➢ Implement some security measures: 
+• users and privileges
+• prevent the possibility of SQL injection.
+
+
