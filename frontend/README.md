@@ -86,10 +86,10 @@ Andre forhandlere du kan logge ind med: `dealer2` … `dealer20` (samme adgangsk
 
 **Hvad du kan teste:**
 - Brug søgefiltrene (mærke, brændstof, pris, årgang) til at finde annoncer
-- Klik på en annonce → **♥ Tilføj favorit** eller **🛒 Køb bilen**
+- Klik på en annonce → **Tilføj favorit** eller **Køb bilen**
 - Åbn **Favoritter**-fanen og fjern en favorit
 - Forsøg at tilføje en allerede købt (solgt) bil til favoritter → du får en fejl
-- Send en besked til en forhandler via **✉ Kontakt sælger** i detalje-modalen
+- Send en besked til en forhandler via **Kontakt sælger** i detalje-modalen
 - Tjek **Beskeder → Sendt** for at se beskeden
 
 ---
@@ -106,6 +106,6 @@ Nye brugere får automatisk rollen **CUSTOMER**.
 | Rolle | Annoncer | Mine annoncer | Favoritter | Beskeder | Admin |
 |---|---|---|---|---|---|
 | Ikke logget ind | Læse | — | — | — | — |
-| CUSTOMER | Læse + Køb | — | ✓ | ✓ | — |
-| DEALER | Læse | Opret/Rediger/Slet | — | ✓ | — |
-| ADMIN | Læse | Opret/Rediger/Slet | — | ✓ | ✓ |
+| CUSTOMER | Læse + Køb | — | Ja | Ja | — |
+| DEALER | Læse | Opret/Rediger/Slet | — | Ja | — |
+| ADMIN | Læse | Opret/Rediger/Slet | — | Ja | Ja |

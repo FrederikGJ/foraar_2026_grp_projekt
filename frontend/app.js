@@ -237,8 +237,8 @@ function listingCard(l) {
       <div class="card-sub">${l.year} &nbsp;·&nbsp; ${l.color}</div>
       <div class="card-price">${fmt(l.price)}</div>
       <div class="card-tags">
-        <span class="tag">⛽ ${l.fuelType}</span>
-        <span class="tag">🔢 ${fmtNum(l.mileageKm)} km</span>
+        <span class="tag">${l.fuelType}</span>
+        <span class="tag">${fmtNum(l.mileageKm)} km</span>
       </div>
       <div class="card-seller">Sælger: ${l.sellerUsername}</div>
       ${actions ? `<div class="card-actions" onclick="event.stopPropagation()">${actions}</div>` : ''}
@@ -247,7 +247,7 @@ function listingCard(l) {
 
 function cardActions(l) {
   if (isCustomer() && !l.sold)
-    return `<button class="btn btn-success btn-sm" onclick="doAddFavorite(${l.id})">♥ Favorit</button>`;
+    return `<button class="btn btn-success btn-sm" onclick="doAddFavorite(${l.id})">Favorit</button>`;
   return '';
 }
 
@@ -282,15 +282,15 @@ async function openDetail(id) {
   let actions = '';
   if (isCustomer() && !l.sold) {
     actions = `
-      <button class="btn btn-success" onclick="doAddFavorite(${l.id})">♥ Tilføj favorit</button>
-      <button class="btn btn-primary" onclick="doBuy(${l.id})">🛒 Køb bilen</button>
-      <button class="btn btn-secondary" onclick="openMessageModal(${l.id},'${l.sellerUsername}')">✉ Kontakt sælger</button>`;
+      <button class="btn btn-success" onclick="doAddFavorite(${l.id})">Tilføj favorit</button>
+      <button class="btn btn-primary" onclick="doBuy(${l.id})">Køb bilen</button>
+      <button class="btn btn-secondary" onclick="openMessageModal(${l.id},'${l.sellerUsername}')">Kontakt sælger</button>`;
   } else if (isMine && !l.sold) {
     actions = `
-      <button class="btn btn-warning" onclick="closeModal();openEditModal(${l.id},${l.price})">✏ Rediger</button>
-      <button class="btn btn-danger" onclick="closeModal();doDelete(${l.id})">🗑 Slet</button>`;
+      <button class="btn btn-warning" onclick="closeModal();openEditModal(${l.id},${l.price})">Rediger</button>
+      <button class="btn btn-danger" onclick="closeModal();doDelete(${l.id})">Slet</button>`;
   } else if (isLoggedIn() && !isMine) {
-    actions = `<button class="btn btn-secondary" onclick="openMessageModal(${l.id},'${l.sellerUsername}')">✉ Kontakt sælger</button>`;
+    actions = `<button class="btn btn-secondary" onclick="openMessageModal(${l.id},'${l.sellerUsername}')">Kontakt sælger</button>`;
   }
 
   openModal(`
@@ -314,7 +314,7 @@ async function openDetail(id) {
 async function doBuy(id) {
   const res = await api('POST', `/api/listings/${id}/sale`);
   if (res.ok) {
-    toast('Tillykke! Du har købt bilen 🎉', 'success');
+    toast('Tillykke! Du har købt bilen', 'success');
     closeModal(); showListings();
   } else {
     const e = await res.json().catch(()=>({}));
@@ -386,12 +386,12 @@ function myCard(l) {
       <div class="card-sub">${l.year} · ${l.color}</div>
       <div class="card-price">${fmt(l.price)}</div>
       <div class="card-tags">
-        <span class="tag">⛽ ${l.fuelType}</span>
-        <span class="tag">🔢 ${fmtNum(l.mileageKm)} km</span>
+        <span class="tag">${l.fuelType}</span>
+        <span class="tag">${fmtNum(l.mileageKm)} km</span>
       </div>
       <div class="card-actions" onclick="event.stopPropagation()">
-        <button class="btn btn-warning btn-sm" onclick="openEditModal(${l.id},${l.price})">✏ Rediger</button>
-        <button class="btn btn-danger btn-sm" onclick="doDelete(${l.id})" ${l.sold?'disabled':''}>🗑 Slet</button>
+        <button class="btn btn-warning btn-sm" onclick="openEditModal(${l.id},${l.price})">Rediger</button>
+        <button class="btn btn-danger btn-sm" onclick="doDelete(${l.id})" ${l.sold?'disabled':''}>Slet</button>
       </div>
     </div>`;
 }
@@ -495,7 +495,7 @@ async function doAddFavorite(listingId) {
   if (!isLoggedIn()) { navigate('login'); return; }
   const res = await api('POST', '/api/favorites', {carListingId: listingId});
   if (res.status === 201) {
-    toast('Tilføjet til favoritter ♥', 'success');
+    toast('Tilføjet til favoritter', 'success');
   } else {
     const e = await res.json().catch(()=>({}));
     toast(e.message || 'Kunne ikke tilføje favorit', 'error');
@@ -528,9 +528,9 @@ async function showMessages() {
   document.getElementById('app').innerHTML = `
     <div class="section-header"><h1>Beskeder</h1></div>
     <div class="tabs">
-      <button class="tab ${msgTab==='inbox'?'active':''}"  onclick="switchTab('inbox')">📥 Indbakke</button>
-      <button class="tab ${msgTab==='outbox'?'active':''}" onclick="switchTab('outbox')">📤 Sendt</button>
-      <button class="tab ${msgTab==='new'?'active':''}"    onclick="switchTab('new')">✉ Ny besked</button>
+      <button class="tab ${msgTab==='inbox'?'active':''}"  onclick="switchTab('inbox')">Indbakke</button>
+      <button class="tab ${msgTab==='outbox'?'active':''}" onclick="switchTab('outbox')">Sendt</button>
+      <button class="tab ${msgTab==='new'?'active':''}"    onclick="switchTab('new')">Ny besked</button>
     </div>
     <div id="msg-body">${msgTab==='new' ? msgForm() : msgTable(msgs)}</div>`;
 }
@@ -551,7 +551,7 @@ function msgTable(msgs) {
             <td><a href="#" onclick="openDetail(${m.carListingId});return false">#${m.carListingId}</a></td>
             <td>${m.content}</td>
             <td>${fmtDate(m.sentAt)}</td>
-            <td>${m.read?'✓':'·'}</td>
+            <td>${m.read?'Ja':'Nej'}</td>
           </tr>`).join('')}
         </tbody>
       </table>
@@ -695,7 +695,7 @@ async function doLogin() {
     const d = await res.json();
     state.token = d.token;
     state.user  = {id: d.userId, username: d.username, role: d.role};
-    toast(`Velkommen, ${d.username}! 👋`, 'success');
+    toast(`Velkommen, ${d.username}!`, 'success');
     navigate('listings');
   } else {
     toast('Forkert brugernavn eller adgangskode', 'error');
@@ -719,7 +719,7 @@ async function doRegister() {
     const d = await res.json();
     state.token = d.token;
     state.user  = {id: d.userId, username: d.username, role: d.role};
-    toast(`Konto oprettet! Velkommen, ${d.username} 🎉`, 'success');
+    toast(`Konto oprettet! Velkommen, ${d.username}`, 'success');
     navigate('listings');
   } else {
     const e = await res.json().catch(()=>({}));
