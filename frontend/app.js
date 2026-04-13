@@ -558,14 +558,10 @@ function msgTable(msgs) {
     </div>`;
 }
 
-function msgForm(prefillListingId = '', prefillReceiverId = '') {
+function msgForm(prefillListingId = '') {
   return `
     <div class="form-card">
       <div class="form-grid">
-        <div class="field">
-          <label>Modtager bruger-ID</label>
-          <input type="number" id="m-receiver" placeholder="2" value="${prefillReceiverId}">
-        </div>
         <div class="field">
           <label>Annonce ID</label>
           <input type="number" id="m-listing" placeholder="1" value="${prefillListingId}">
@@ -576,7 +572,7 @@ function msgForm(prefillListingId = '', prefillReceiverId = '') {
         </div>
       </div>
       <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:1rem">
-        Bruger-IDs fra seed-data: admin=1, dealer1=2 … dealer20=21, customer22=22 …
+        Modtager findes automatisk ud fra annoncen.
       </p>
       <button class="btn btn-primary" onclick="doSend()">Send besked</button>
     </div>`;
@@ -585,12 +581,11 @@ function msgForm(prefillListingId = '', prefillReceiverId = '') {
 function switchTab(t) { msgTab = t; showMessages(); }
 
 async function doSend() {
-  const rid     = parseInt(document.getElementById('m-receiver')?.value);
   const lid     = parseInt(document.getElementById('m-listing')?.value);
   const content = document.getElementById('m-content')?.value?.trim();
-  if (!rid || !lid || !content) { toast('Udfyld alle felter', 'error'); return; }
+  if (!lid || !content) { toast('Udfyld alle felter', 'error'); return; }
 
-  const res = await api('POST', '/api/messages', {receiverId: rid, carListingId: lid, content});
+  const res = await api('POST', '/api/messages', {carListingId: lid, content});
   if (res.status === 201) {
     toast('Besked sendt!', 'success');
     closeModal(); msgTab = 'outbox'; showMessages();

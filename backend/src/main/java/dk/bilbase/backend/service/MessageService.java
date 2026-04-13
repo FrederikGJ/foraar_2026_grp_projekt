@@ -47,10 +47,9 @@ public class MessageService {
     public MessageResponse send(Long senderId, SendMessageRequest req) {
         AppUser sender = userRepo.findById(senderId)
                 .orElseThrow(() -> new EntityNotFoundException("Sender not found: " + senderId));
-        AppUser receiver = userRepo.findById(req.receiverId())
-                .orElseThrow(() -> new EntityNotFoundException("Receiver not found: " + req.receiverId()));
         CarListing listing = listingRepo.findById(req.carListingId())
                 .orElseThrow(() -> new EntityNotFoundException("Listing not found: " + req.carListingId()));
+        AppUser receiver = listing.getSeller();
 
         // DB triggers validate: sender != receiver, listing not sold
         // DataIntegrityViolation with SQLState 45000 → 400 via GlobalExceptionHandler

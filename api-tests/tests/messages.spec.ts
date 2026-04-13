@@ -62,7 +62,6 @@ test.describe('Messages', () => {
     const res = await request.post(`${BASE}/api/messages`, {
       headers: { Authorization: `Bearer ${customerToken}` },
       data: {
-        receiverId: 2, // dealer1
         carListingId: listingId,
         content: 'Hej, er bilen stadig til salg?',
       },
@@ -73,11 +72,10 @@ test.describe('Messages', () => {
   });
 
   test('POST /api/messages to self returns 400', async ({ request }) => {
-    // admin (id=1) sends to receiverId=1 — should be rejected
+    // dealer1 owns listingId → sending about own listing = besked til sig selv
     const res = await request.post(`${BASE}/api/messages`, {
-      headers: { Authorization: `Bearer ${adminToken}` },
+      headers: { Authorization: `Bearer ${dealerToken}` },
       data: {
-        receiverId: 1,
         carListingId: listingId,
         content: 'Besked til mig selv',
       },
