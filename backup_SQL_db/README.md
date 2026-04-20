@@ -6,27 +6,20 @@ Dette script tager en backup af MySQL-databasen `bilbase_projekt` som korer i en
 
 ## Krav
 
-- Mac eller Linux
 - Docker skal vaere installeret og kore
 - Containeren `Bilbase_MySQL` skal vaere startet (`docker compose up -d`)
 
-> **Windows:** Scriptet virker ikke nativt pa Windows. Det kraever enten WSL (Windows Subsystem for Linux) eller Git Bash.
-
 ---
 
-## Kom i gang
+## 1. Backup - Mac / Linux
 
-### 1. Giv scriptet rettigheder
-
-Forste gang skal du give scriptet tilladelse til at blive eksekveret:
+Giv scriptet rettigheder forste gang:
 
 ```bash
 chmod +x backup.sh
 ```
 
-Dette beholder du kun gore en gang.
-
-### 2. Kor scriptet
+Kor backup:
 
 ```bash
 ./backup.sh
@@ -34,19 +27,25 @@ Dette beholder du kun gore en gang.
 
 ---
 
-## Hvad sker der nar man korer det?
+## 2. Backup - Windows (PowerShell)
 
-1. Scriptet tjekker om Docker-containeren `Bilbase_MySQL` korer
-2. Hvis ikke, vises en fejlbesked og scriptet stopper
-3. Hvis ja, kores `mysqldump` inde i containeren
-4. Backup-filen gemmes i mappen `./backups/`
-5. Filer aeldere end 7 dage slettes automatisk
+Tillad koersel af scripts forste gang - abn PowerShell som administrator og kors:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Kor backup:
+
+```powershell
+.\backup.ps1
+```
 
 ---
 
-## Output
+## 3. Gendannelse af backup (Restore)
 
-Backups gemmes som `.sql`-filer med timestamp i filnavnet:
+Backups gemmes i mappen `./backups/` med timestamp i filnavnet:
 
 ```
 backups/
@@ -54,13 +53,7 @@ backups/
   bilbase_projekt_2026-04-19_09-15-42.sql
 ```
 
-Datoformatet er `YYYY-MM-DD_HH-MM-SS`, sa filerne sorterer korrekt kronologisk.
-
----
-
-## Gendannelse af backup (Restore)
-
-Har du en `.sql`-fil du vil laese ind i databasen, gores det sadan her.
+Udskift filnavnet i kommandoerne nedenfor med den backup du vil gendanne.
 
 ### Mac / Linux
 
@@ -80,28 +73,6 @@ Get-Content .\backups\bilbase_projekt_2026-04-20_14-30-00.sql | `
   --password=123456 `
   bilbase_projekt
 ```
-
-Udskift filnavnet med den backup du vil gendanne. Databasen skal vaere tom eller eksistere i forvejen - scriptet overskriver ikke databasen, det indsaetter data oven i det der allerede er der.
-
-
-
-Windows-brugere kan bruge `backup.ps1` i stedet, som virker direkte i PowerShell.
-
-### 1. Tillad koersel af scripts (kun forste gang)
-
-Abn PowerShell som administrator og kors:
-
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-### 2. Kor scriptet
-
-```powershell
-.\backup.ps1
-```
-
-Backups gemmes i `.\backups\` med samme navneformat som bash-versionen.
 
 ---
 
