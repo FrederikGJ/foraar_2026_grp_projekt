@@ -1,0 +1,93 @@
+{
+  "info": {
+    "_postman_id": "746db4cb-8dcf-4688-b269-5b71979a579f",
+    "name": "Bilbase - AI Moderation Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52657212",
+    "_collection_link": "https://go.postman.co/collection/52657212-746db4cb-8dcf-4688-b269-5b71979a579f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth - Login dealer1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"dealer1\",\r\n  \"password\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listings - Get listings",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWFsZXIxIiwidWlkIjoyLCJyb2xlIjoiREVBTEVSIiwiaWF0IjoxNzc2Njc0NjY1LCJleHAiOjE3NzY3NjEwNjV9.hESlC8S8iLxmkKsqgcPu9WKuRFrjXggmpJam0RVErabk3DmHD0nm-xYmOSfugcR7j-ACo_heA2dbOV8kFf98Vg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/listings",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "listings"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AI - Moderate listing",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/listings/102/moderate",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "listings",
+            "102",
+            "moderate"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
