@@ -58,9 +58,32 @@ Datoformatet er `YYYY-MM-DD_HH-MM-SS`, sa filerne sorterer korrekt kronologisk.
 
 ---
 
----
+## Gendannelse af backup (Restore)
 
-## Windows (PowerShell)
+Har du en `.sql`-fil du vil laese ind i databasen, gores det sadan her.
+
+### Mac / Linux
+
+```bash
+docker exec -i Bilbase_MySQL mysql \
+  --user=user \
+  --password=123456 \
+  bilbase_projekt < ./backups/bilbase_projekt_2026-04-20_14-30-00.sql
+```
+
+### Windows (PowerShell)
+
+```powershell
+Get-Content .\backups\bilbase_projekt_2026-04-20_14-30-00.sql | `
+  docker exec -i Bilbase_MySQL mysql `
+  --user=user `
+  --password=123456 `
+  bilbase_projekt
+```
+
+Udskift filnavnet med den backup du vil gendanne. Databasen skal vaere tom eller eksistere i forvejen - scriptet overskriver ikke databasen, det indsaetter data oven i det der allerede er der.
+
+
 
 Windows-brugere kan bruge `backup.ps1` i stedet, som virker direkte i PowerShell.
 
