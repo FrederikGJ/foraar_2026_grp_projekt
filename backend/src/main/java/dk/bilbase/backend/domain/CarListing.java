@@ -49,6 +49,19 @@ public class CarListing {
     @OneToOne(mappedBy = "carListing", fetch = FetchType.LAZY)
     private CarSale sale;
 
+    @Column(name = "ai_flagged", nullable = false)
+    private boolean aiFlagged;
+
+    @Column(name = "ai_category", length = 50)
+    private String aiCategory;
+
+    @Column(name = "ai_moderation_note", columnDefinition = "TEXT")
+    private String aiModerationNote;
+
+    @Column(name = "ai_checked_at")
+    private LocalDateTime aiCheckedAt;
+
+
     protected CarListing() {
     }
 
@@ -79,4 +92,16 @@ public class CarListing {
     public void setSeller(AppUser seller) { this.seller = seller; }
     public void setAddress(Address address) { this.address = address; }
     public void setDescription(String description) { this.description = description; }
+
+    public boolean isAiFlagged() { return aiFlagged; }
+    public String getAiCategory() { return aiCategory; }
+    public String getAiModerationNote() { return aiModerationNote; }
+    public LocalDateTime getAiCheckedAt() { return aiCheckedAt; }
+
+    public void setAiFlagged(boolean aiFlagged) { this.aiFlagged = aiFlagged; }
+    public void setAiCategory(String aiCategory) { this.aiCategory = aiCategory; }
+    public void setAiModerationNote(String aiModerationNote) { this.aiModerationNote = aiModerationNote; }
+    public void setAiCheckedAt(LocalDateTime aiCheckedAt) { this.aiCheckedAt = aiCheckedAt; }
+
+
 }

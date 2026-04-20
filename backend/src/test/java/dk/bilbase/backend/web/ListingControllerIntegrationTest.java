@@ -30,7 +30,7 @@ class ListingControllerIntegrationTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    private String dealerToken;
+    String dealerToken;
     private String customerToken;
 
     @BeforeEach

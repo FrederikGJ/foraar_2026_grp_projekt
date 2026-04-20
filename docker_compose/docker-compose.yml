@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: bilbase_projekt
-      MYSQL_USER: user
+      MYSQL_USER: root
       MYSQL_PASSWORD: 123456
     ports:
       - "3307:3306"
