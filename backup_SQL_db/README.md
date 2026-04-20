@@ -1,25 +1,25 @@
 # Database Backup Script - Bilbase Projekt
 
-Dette script tager en backup af MySQL-databasen `bilbase_projekt` som korer i en Docker container.
+Dette script tager en backup af MySQL-databasen `bilbase_projekt` som kører i en Docker container.
 
 ---
 
 ## Krav
 
-- Docker skal vaere installeret og kore
-- Containeren `Bilbase_MySQL` skal vaere startet (`docker compose up -d`)
+- Docker skal være installeret og køre
+- Containeren `Bilbase_MySQL` skal være startet (`docker compose up -d`)
 
 ---
 
 ## 1. Backup - Mac / Linux
 
-Giv scriptet rettigheder forste gang:
+Giv scriptet rettigheder første gang:
 
 ```bash
 chmod +x backup.sh
 ```
 
-Kor backup:
+Kør backup:
 
 ```bash
 ./backup.sh
@@ -29,13 +29,13 @@ Kor backup:
 
 ## 2. Backup - Windows (PowerShell)
 
-Tillad koersel af scripts forste gang - abn PowerShell som administrator og kors:
+Tillad kørsel af scripts første gang - åbn PowerShell som administrator og kør:
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-Kor backup:
+Kør backup:
 
 ```powershell
 .\backup.ps1
@@ -80,6 +80,6 @@ Get-Content .\backups\bilbase_projekt_2026-04-20_14-30-00.sql | `
 
 | Besked | Betydning |
 |---|---|
-| `[FEJL] Containeren korer ikke` | Start containeren med `docker compose up -d` |
+| `[FEJL] Containeren kører ikke` | Start containeren med `docker compose up -d` |
 | `[FEJL] Backup mislykkedes eller filen er tom` | Tjek at brugernavn og password i scriptet er korrekte |
-| `[OK] Backup gennemfort` | Alt gik godt |
+| `[OK] Backup gennemført` | Alt gik godt | 
