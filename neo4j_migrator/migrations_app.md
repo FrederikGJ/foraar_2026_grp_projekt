@@ -173,7 +173,7 @@ CREATE INDEX message_sent    FOR (m:Message)    ON (m.sentAt);
 
 ## 6. Acceptance criteria
 
-- [ ] Scriptet kører mod en tom Neo4j-instans og fylder den med alle data fra MySQL.
+- [ ] Scriptet kører mod en tom Neo4j-instans og fylder den med alle data fra MySQL. Det er altså en docker container og der skal laves en docker compose med neo4j 5 community og det er med APOC, som er tilgængeligt i nr 5. MySQL kører også i en docker container. 
 - [ ] MySQL er uændret efter kørsel — row counts identiske før og efter.
 - [ ] Node counts matcher MySQL:
   - `SELECT COUNT(*) FROM app_user` == `MATCH (u:User) RETURN count(u)`
