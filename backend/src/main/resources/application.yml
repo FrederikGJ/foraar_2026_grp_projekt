@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: bilbase-backend
+  profiles:
+    active: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      # SQL-scripts ejer skemaet — vi rører det ikke fra Java
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: false
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    # Dev secret — overrid via env var APP_JWT_SECRET i prod
+    secret: ${APP_JWT_SECRET:bilbase-dev-secret-change-me-in-production-please-32-bytes-min!!}
+    expiration-ms: 86400000   # 24 timer
+

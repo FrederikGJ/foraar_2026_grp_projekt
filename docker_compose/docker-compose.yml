@@ -1,18 +1,18 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql_local
+    container_name: Bilbase_MySQL
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: bilbase_projekt
-      MYSQL_USER: user
+      MYSQL_USER: root
       MYSQL_PASSWORD: 123456
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    command: --log-bin-trust-function-creators=1   
+    command: --log-bin-trust-function-creators=1
 
 volumes:
   mysql_data:
