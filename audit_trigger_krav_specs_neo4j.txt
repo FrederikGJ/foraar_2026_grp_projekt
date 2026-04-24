@@ -1,0 +1,78 @@
+KRAVSPECIFIKATION: AUDIT LOGGING I APPLAGET
+=============================================
+
+FORMÅL
+------
+Implementere audit logging af ændringer på domæneobjekter (fx Car) i applaget
+(Spring/Java) i stedet for på databaseniveau via Neo4j APOC triggers.
+
+Audit-logikken skal styres fra Java-koden og køre som en del af samme
+transaktion som selve ændringen.
+
+
+FUNKTIONELLE KRAV
+-----------------
+
+FK-1: 1:1 Funktionalitet med eksisterende trigger-løsning
+  - Løsningen skal give adgang til både gamle og nye værdier
+  - Objektet læses fra databasen før opdatering, så begge værdier er
+    tilgængelige i Java-koden
+
+FK-2: Fuld kontrol over audit-data
+  Følgende felter skal kunne logges pr. audit event:
+    - action (fx UPDATE, CREATE, DELETE)
+    - changedBy (brugerreference)
+    - oldValue (fx oldPrice)
+    - newValue (fx newPrice)
+    - timestamp (hvornår ændringen skete)
+    - (evt. flere felter efter behov)
+
+FK-3: Transaktionel garanti
+  - Ændringen af domæneobjektet og oprettelsen af AuditEvent skal ske i
+    samme Neo4j-transaktion
+  - Anvend Spring @Transactional til at wrappe operationen
+  - Hvis audit-oprettelsen fejler, skal selve ændringen rulles tilbage
+
+FK-4: Data-model i Neo4j
+  Service-metoden (fx updateCarPrice) skal udføre to operationer i samme
+  transaktion:
+    1. Opdatere Car-noden (eller tilsvarende domæne-node)
+    2. Oprette en AuditEvent-node med følgende relationer:
+         - AUDIT_OF         -> peger på det ændrede objekt (fx Car)
+         - PERFORMED_BY     -> peger på brugeren der udførte ændringen
+
+
+NON-FUNKTIONELLE KRAV
+---------------------
+
+NFK-1: Testbarhed
+  - Audit-logikken skal kunne unit-testes direkte i Java
+  - Ingen afhængighed til database-triggers under test
+
+NFK-2: Ingen APOC-afhængighed
+  - Løsningen må ikke være afhængig af APOC-plugin
+  - Dette fjerner behov for:
+      * vedligeholdelse af plugin
+      * versionsmatch mellem APOC og Neo4j
+
+NFK-3: Gennemskuelighed og vedligeholdbarhed
+  - Audit-logikken skal være eksplicit i koden (ikke skjult i
+    database-triggers)
+  - Lettere debugging og forståelse
+  - Lettere onboarding af nye udviklere
+
+
+AFGRÆNSNING
+-----------
+  - Audit-logikken er bevidst synlig i applaget (ikke "usynlig" som ved
+    triggers). Dette accepteres som en fordel, ikke en ulempe.
+
+
+ACCEPTKRITERIER
+---------------
+  [ ] Ved opdatering af et domæneobjekt oprettes der en AuditEvent-node
+      med korrekte relationer (AUDIT_OF, PERFORMED_BY)
+  [ ] Både gamle og nye værdier logges korrekt
+  [ ] Hvis en del af operationen fejler, rulles hele transaktionen tilbage
+  [ ] Løsningen fungerer uden APOC installeret
+  [ ] Audit-logik er dækket af unit tests

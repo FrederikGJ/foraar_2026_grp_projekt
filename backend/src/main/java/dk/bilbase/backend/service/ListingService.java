@@ -71,7 +71,8 @@ public class ListingService {
                                          Integer yearFrom, Integer yearTo,
                                          BigDecimal priceFrom, BigDecimal priceTo,
                                          Pageable pageable) {
-        Specification<CarListing> spec = Specification.where(null);
+
+        Specification<CarListing> spec = (root, query, cb) -> cb.conjunction();
 
         if (brand != null)     spec = spec.and(ListingSpecifications.hasBrand(brand));
         if (model != null)     spec = spec.and(ListingSpecifications.hasModel(model));
