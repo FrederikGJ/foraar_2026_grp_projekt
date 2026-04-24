@@ -6,6 +6,7 @@ import dk.bilbase.backend.dto.ListingResponse;
 import dk.bilbase.backend.dto.UpdateListingRequest;
 import dk.bilbase.backend.repository.view.ActiveListingViewRepository;
 import dk.bilbase.backend.security.AppUserPrincipal;
+import dk.bilbase.backend.service.AiModerationService;
 import dk.bilbase.backend.service.ListingService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -34,11 +35,14 @@ public class ListingController {
 
     private final ListingService listingService;
     private final ActiveListingViewRepository activeListingRepo;
+    private final AiModerationService aiModerationService;
 
     public ListingController(ListingService listingService,
-                             ActiveListingViewRepository activeListingRepo) {
+                             ActiveListingViewRepository activeListingRepo,
+                             AiModerationService aiModerationService) {
         this.listingService = listingService;
         this.activeListingRepo = activeListingRepo;
+        this.aiModerationService = aiModerationService;
     }
 
     @GetMapping("/active")
@@ -94,5 +98,12 @@ public class ListingController {
     public ListingResponse createSale(@PathVariable Long id,
                                       @AuthenticationPrincipal AppUserPrincipal principal) {
         return listingService.createSale(id, principal.getId());
+    }
+
+    @PostMapping("/{id}/moderate")
+    @PreAuthorize("hasAnyRole('DEALER','ADMIN')")
+    public ListingResponse moderateListing(@PathVariable Long id,
+                                           @AuthenticationPrincipal AppUserPrincipal principal) {
+        return aiModerationService.moderateListing(id, principal);
     }
 }

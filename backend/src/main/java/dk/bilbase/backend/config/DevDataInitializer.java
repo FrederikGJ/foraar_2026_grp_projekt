@@ -14,6 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * af "password123" — så I kan logge ind som admin / dealer1 / customer1 osv. i dev.
  *
  * Kører kun i 'dev'-profilen og kun hvis dummy-hashes faktisk findes (idempotent).
+ *
+ *
+ * It is a dev-only configuration class that runs on startup to update dummy user
+ * passwords in the database from plain text to hashed passwords using PasswordEncoder,
+ * in order to protect passwords if the database is exposed.
+ * It only runs in the dev profile and only when needed.
  */
 @Configuration
 @Profile("dev")

@@ -142,3 +142,11 @@ CREATE TABLE message (
     FOREIGN KEY (receiver_id)    REFERENCES app_user(id),
     FOREIGN KEY (car_listing_id) REFERENCES car_listing(id)
 );
+
+
+-- For AI Integration
+ALTER TABLE car_listing
+    ADD COLUMN ai_flagged TINYINT(1) NOT NULL DEFAULT 0,
+    ADD COLUMN ai_category VARCHAR(50) NULL,
+    ADD COLUMN ai_moderation_note TEXT NULL,
+    ADD COLUMN ai_checked_at TIMESTAMP NULL;

@@ -1,5 +1,8 @@
 package dk.bilbase.backend.config;
 
+/** This configuration allows CORS-requests fom http://localhost:* to endpoints, that match our /api/ **/
+
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;

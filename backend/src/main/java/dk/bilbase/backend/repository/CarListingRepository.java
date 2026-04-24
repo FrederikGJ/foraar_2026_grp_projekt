@@ -10,4 +10,7 @@ public interface CarListingRepository extends JpaRepository<CarListing, Long>,
                                               JpaSpecificationExecutor<CarListing> {
 
     List<CarListing> findBySellerId(Long sellerId);
+
+
+
 }
