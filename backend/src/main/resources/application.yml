@@ -7,7 +7,7 @@ spring:
     open-in-view: false
     hibernate:
       # SQL-scripts ejer skemaet — vi rører det ikke fra Java
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
