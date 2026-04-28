@@ -24,7 +24,7 @@ docker compose up -d --build
 2. Udfyld felterne:
    - **Connection Name:** Bilbase Projekt
    - **Hostname:** `127.0.0.1`
-   - **Port:** `3307`
+   - **Port:** `3310`
    - **Username:** `user`
 3. Klik **Test Connection**, indtast password `123456`
 4. Klik **OK** – forbindelsen er klar. 

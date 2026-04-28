@@ -1,18 +1,19 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: Bilbase_MySQL
+    container_name: bilbase_mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: bilbase_projekt
-      MYSQL_USER: root
+      MYSQL_DATABASE: bilbase
+      MYSQL_USER: user
       MYSQL_PASSWORD: 123456
     ports:
-      - "3307:3306"
+      - "3310:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - bilbase_mysql_data:/var/lib/mysql
+      - ../SQL_scripts:/docker-entrypoint-initdb.d
     command: --log-bin-trust-function-creators=1
 
 volumes:
-  mysql_data:
+  bilbase_mysql_data:
