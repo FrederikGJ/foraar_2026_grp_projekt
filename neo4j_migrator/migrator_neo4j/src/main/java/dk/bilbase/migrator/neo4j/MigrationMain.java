@@ -13,9 +13,9 @@ public class MigrationMain {
     private static final Logger log = LoggerFactory.getLogger(MigrationMain.class);
 
     public static void main(String[] args) {
-        String mysqlUrl = env("MYSQL_URL", "jdbc:mysql://localhost:3306/bilbase");
-        String mysqlUser = env("MYSQL_USER", "migrator_ro");
-        String mysqlPassword = env("MYSQL_PASSWORD", "");
+        String mysqlUrl = env("MYSQL_URL", "jdbc:mysql://localhost:3310/bilbase");
+        String mysqlUser = env("MYSQL_USER", "user");
+        String mysqlPassword = env("MYSQL_PASSWORD", "123456");
         String neo4jUri = env("NEO4J_URI", "bolt://localhost:7687");
         String neo4jUser = env("NEO4J_USER", "neo4j");
         String neo4jPassword = env("NEO4J_PASSWORD", "bilbasen");
