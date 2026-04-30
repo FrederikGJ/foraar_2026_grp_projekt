@@ -14,7 +14,6 @@ CREATE CONSTRAINT car_id_unique         FOR (c:Car)        REQUIRE c.id IS UNIQU
 CREATE CONSTRAINT listing_id_unique     FOR (l:CarListing) REQUIRE l.id IS UNIQUE;
 CREATE CONSTRAINT sale_id_unique        FOR (s:Sale)       REQUIRE s.id IS UNIQUE;
 CREATE CONSTRAINT message_id_unique     FOR (m:Message)    REQUIRE m.id IS UNIQUE;
-CREATE CONSTRAINT audit_id_unique       FOR (a:AuditEvent) REQUIRE a.id IS UNIQUE;
 
 // Performance indexes
 CREATE INDEX address_postal  FOR (a:Address)    ON (a.postalCode);

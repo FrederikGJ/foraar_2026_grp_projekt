@@ -23,8 +23,7 @@ public class MigrationRunner {
             new CarListingMigrator(),
             new SaleMigrator(),
             new FavoriteMigrator(),
-            new MessageMigrator(),
-            new AuditEventMigrator()
+            new MessageMigrator()
         );
 
         for (Migrator migrator : migrators) {
