@@ -179,7 +179,10 @@ async function showListings() {
 
   const res  = await api('GET', `/api/listings?${p}`);
   const data = await res.json();
-  const list = data.content || [];
+  const all  = data.content || [];
+  const list = all.filter(l =>
+    !l.sold || isAdmin() || (isDealer() && l.sellerUsername === state.user?.username)
+  );
 
   document.getElementById('app').innerHTML = `
     <div class="filter-bar">
@@ -278,6 +281,7 @@ async function openDetail(id) {
   if (!res.ok) { toast('Kunne ikke hente annonce', 'error'); return; }
   const l = await res.json();
   const isMine = (isDealer() || isAdmin()) && l.sellerUsername === state.user?.username;
+  if (l.sold && !isAdmin() && !isMine) { toast('Denne annonce er ikke tilgængelig', 'error'); return; }
 
   let actions = '';
   if (isCustomer() && !l.sold) {
