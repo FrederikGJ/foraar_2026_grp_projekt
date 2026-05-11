@@ -23,6 +23,7 @@ public class MigrationRunner {
             new CarListingMigrator(),
             new SaleMigrator(),
             new FavoriteMigrator(),
+            new CollaborativeFavoritesMigrator(),
             new MessageMigrator()
         );
 
