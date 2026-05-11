@@ -13,6 +13,7 @@ public class MigrationRunner {
 
     public void run(Connection mysql, Driver neo4j) {
         List<Migrator> migrators = List.of(
+            new DatabaseCleaner(),
             new RegionMigrator(),
             new BrandMigrator(),
             new FuelTypeMigrator(),
