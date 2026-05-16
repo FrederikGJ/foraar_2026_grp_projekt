@@ -21,21 +21,15 @@ public class SaleController {
         this.saleRepository = saleRepository;
     }
 
-    /**
-     * GET /api/sales?buyerId=user_5
-     * All purchases made by a user, newest first.
-     */
+    // GET /api/sales?buyerId=user_5
     @GetMapping
-    public List<Sale> byBuyer(@RequestParam String buyerId) {
+    public List<Sale> byBuyer(@RequestParam(name = "buyerId") String buyerId) {
         return saleRepository.findByBuyerIdOrderBySoldAtDesc(buyerId);
     }
 
-    /**
-     * GET /api/sales/listing/{listingId}
-     * Sale record for a specific listing (if sold).
-     */
+    // GET /api/sales/listing/listing_4
     @GetMapping("/listing/{listingId}")
-    public ResponseEntity<Sale> byListing(@PathVariable String listingId) {
+    public ResponseEntity<Sale> byListing(@PathVariable(name = "listingId") String listingId) {
         return saleRepository.findByListingId(listingId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

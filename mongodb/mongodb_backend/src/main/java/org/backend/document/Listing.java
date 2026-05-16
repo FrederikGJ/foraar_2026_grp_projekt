@@ -14,8 +14,22 @@ public class Listing {
     private Seller  seller;
     private Address address;
     private String  description;
-    private Date    soldAt;     // null = still for sale
+    private Date    soldAt;
     private Date    createdAt;
+
+    // Required by Spring Data for deserialization
+    public Listing() {}
+
+    public Listing(String id, Car car, Seller seller, Address address,
+                   String description, Date soldAt, Date createdAt) {
+        this.id          = id;
+        this.car         = car;
+        this.seller      = seller;
+        this.address     = address;
+        this.description = description;
+        this.soldAt      = soldAt;
+        this.createdAt   = createdAt;
+    }
 
     // ── Embedded records ─────────────────────────────────────────────────────
 

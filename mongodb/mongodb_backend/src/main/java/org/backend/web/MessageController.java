@@ -20,30 +20,21 @@ public class MessageController {
         this.messageRepository = messageRepository;
     }
 
-    /**
-     * GET /api/messages/inbox?userId=user_3
-     * All messages received by a user, newest first.
-     */
+    // GET /api/messages/inbox?userId=user_3
     @GetMapping("/inbox")
-    public List<Message> inbox(@RequestParam String userId) {
+    public List<Message> inbox(@RequestParam(name = "userId") String userId) {
         return messageRepository.findByReceiverIdOrderBySentAtDesc(userId);
     }
 
-    /**
-     * GET /api/messages/outbox?userId=user_3
-     * All messages sent by a user, newest first.
-     */
+    // GET /api/messages/outbox?userId=user_3
     @GetMapping("/outbox")
-    public List<Message> outbox(@RequestParam String userId) {
+    public List<Message> outbox(@RequestParam(name = "userId") String userId) {
         return messageRepository.findBySenderIdOrderBySentAtDesc(userId);
     }
 
-    /**
-     * GET /api/messages/listing/{listingId}
-     * Full message thread for a listing, oldest first.
-     */
+    // GET /api/messages/listing/listing_4
     @GetMapping("/listing/{listingId}")
-    public List<Message> byListing(@PathVariable String listingId) {
+    public List<Message> byListing(@PathVariable(name = "listingId") String listingId) {
         return messageRepository.findByListingIdOrderBySentAtAsc(listingId);
     }
 }
