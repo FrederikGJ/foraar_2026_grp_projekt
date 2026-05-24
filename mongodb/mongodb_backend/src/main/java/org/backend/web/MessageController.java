@@ -1,5 +1,6 @@
 package org.backend.web;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.backend.document.Message;
 import org.backend.repository.MessageRepository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,21 +21,24 @@ public class MessageController {
         this.messageRepository = messageRepository;
     }
 
-    // GET /api/messages/inbox?userId=user_3
     @GetMapping("/inbox")
-    public List<Message> inbox(@RequestParam(name = "userId") String userId) {
+    public List<Message> inbox(
+            @Parameter(example = "user_2")
+            @RequestParam(name = "userId") String userId) {
         return messageRepository.findByReceiverIdOrderBySentAtDesc(userId);
     }
 
-    // GET /api/messages/outbox?userId=user_3
     @GetMapping("/outbox")
-    public List<Message> outbox(@RequestParam(name = "userId") String userId) {
+    public List<Message> outbox(
+            @Parameter(example = "user_22")
+            @RequestParam(name = "userId") String userId) {
         return messageRepository.findBySenderIdOrderBySentAtDesc(userId);
     }
 
-    // GET /api/messages/listing/listing_4
     @GetMapping("/listing/{listingId}")
-    public List<Message> byListing(@PathVariable(name = "listingId") String listingId) {
+    public List<Message> byListing(
+            @Parameter(example = "listing_1")
+            @PathVariable(name = "listingId") String listingId) {
         return messageRepository.findByListingIdOrderBySentAtAsc(listingId);
     }
 }

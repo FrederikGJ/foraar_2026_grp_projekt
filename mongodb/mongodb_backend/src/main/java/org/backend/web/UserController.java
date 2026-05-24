@@ -1,5 +1,6 @@
 package org.backend.web;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.backend.document.User;
 import org.backend.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,15 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    // GET /api/users
     @GetMapping
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    // GET /api/users/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable String id) {
+    public ResponseEntity<User> findById(
+            @Parameter(example = "user_1")
+            @PathVariable(name = "id") String id) {
         return userRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -1,5 +1,6 @@
 package org.backend.web;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.backend.document.Sale;
 import org.backend.repository.SaleRepository;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,17 @@ public class SaleController {
         this.saleRepository = saleRepository;
     }
 
-    // GET /api/sales?buyerId=user_5
     @GetMapping
-    public List<Sale> byBuyer(@RequestParam(name = "buyerId") String buyerId) {
+    public List<Sale> byBuyer(
+            @Parameter(example = "user_22")
+            @RequestParam(name = "buyerId") String buyerId) {
         return saleRepository.findByBuyerIdOrderBySoldAtDesc(buyerId);
     }
 
-    // GET /api/sales/listing/listing_4
     @GetMapping("/listing/{listingId}")
-    public ResponseEntity<Sale> byListing(@PathVariable(name = "listingId") String listingId) {
+    public ResponseEntity<Sale> byListing(
+            @Parameter(example = "listing_1")
+            @PathVariable(name = "listingId") String listingId) {
         return saleRepository.findByListingId(listingId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

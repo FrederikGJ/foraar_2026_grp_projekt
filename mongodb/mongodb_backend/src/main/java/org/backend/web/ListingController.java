@@ -1,5 +1,6 @@
 package org.backend.web;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.backend.document.Listing;
 import org.backend.dto.CreateListingRequest;
 import org.backend.dto.UpdateListingRequest;
@@ -31,16 +32,23 @@ public class ListingController {
         this.listingService = listingService;
     }
 
-    // GET /api/listings
     @GetMapping
     public Page<Listing> findActive(
+            @Parameter(example = "Toyota")
             @RequestParam(name = "brand",     required = false) String  brand,
+            @Parameter(example = "Corolla")
             @RequestParam(name = "model",     required = false) String  model,
+            @Parameter(example = "Benzin")
             @RequestParam(name = "fuelType",  required = false) String  fuelType,
+            @Parameter(example = "Hovedstaden")
             @RequestParam(name = "region",    required = false) String  region,
+            @Parameter(example = "2018")
             @RequestParam(name = "yearFrom",  required = false) Integer yearFrom,
+            @Parameter(example = "2023")
             @RequestParam(name = "yearTo",    required = false) Integer yearTo,
+            @Parameter(example = "50000")
             @RequestParam(name = "priceFrom", required = false) Double  priceFrom,
+            @Parameter(example = "200000")
             @RequestParam(name = "priceTo",   required = false) Double  priceTo,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -49,30 +57,32 @@ public class ListingController {
                 yearFrom, yearTo, priceFrom, priceTo, pageable);
     }
 
-    // GET /api/listings/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<Listing> findById(@PathVariable(name = "id") String id) {
+    public ResponseEntity<Listing> findById(
+            @Parameter(example = "listing_1")
+            @PathVariable(name = "id") String id) {
         return ResponseEntity.ok(listingService.findById(id));
     }
 
-    // POST /api/listings
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Listing create(@RequestBody CreateListingRequest req) {
         return listingService.create(req);
     }
 
-    // PUT /api/listings/{id}
     @PutMapping("/{id}")
-    public Listing update(@PathVariable(name = "id") String id,
-                          @RequestBody UpdateListingRequest req) {
+    public Listing update(
+            @Parameter(example = "listing_1")
+            @PathVariable(name = "id") String id,
+            @RequestBody UpdateListingRequest req) {
         return listingService.update(id, req);
     }
 
-    // DELETE /api/listings/{id}
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(name = "id") String id) {
+    public void delete(
+            @Parameter(example = "listing_1")
+            @PathVariable(name = "id") String id) {
         listingService.delete(id);
     }
 }
