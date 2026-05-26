@@ -13,6 +13,7 @@ public class MigrationRunner {
 
     public void run(Connection mysql, Driver neo4j) {
         List<Migrator> migrators = List.of(
+            new DatabaseCleaner(),
             new RegionMigrator(),
             new BrandMigrator(),
             new FuelTypeMigrator(),
@@ -23,8 +24,8 @@ public class MigrationRunner {
             new CarListingMigrator(),
             new SaleMigrator(),
             new FavoriteMigrator(),
-            new MessageMigrator(),
-            new AuditEventMigrator()
+            new CollaborativeFavoritesMigrator(),
+            new MessageMigrator()
         );
 
         for (Migrator migrator : migrators) {

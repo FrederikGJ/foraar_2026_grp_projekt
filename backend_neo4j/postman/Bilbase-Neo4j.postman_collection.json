@@ -1,0 +1,124 @@
+{
+  "info": {
+    "name": "Bilbase Neo4j API",
+    "description": "Demo-collection til Bilbase Neo4j backend.\nViser graf-database queries via Spring Data Neo4j og Cypher.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Listings",
+      "item": [
+        {
+          "name": "Alle aktive listings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/listings",
+            "description": "Henter alle listings der ikke er solgt. Traverserer CarListing→Car→Model→Brand via graf-relationer i ét Cypher-query."
+          }
+        },
+        {
+          "name": "Listing detaljer (id=1)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/listings/1",
+            "description": "Fuld detalje for én listing. Traverserer hele grafen: CarListing→Car→Model→Brand, Car→FuelType, CarListing→Address→Region, CarListing→User."
+          }
+        },
+        {
+          "name": "Lignende listings (id=1)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/listings/1/similar",
+            "description": "GRAF-TRAVERSAL: Finder listings der deler Brand, Model eller Region med listing #1. Scorer efter antal fælles attributter. Demonstrerer Neo4j's styrke til similarity-queries."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Brands & Regions",
+      "item": [
+        {
+          "name": "Listings for BMW",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/brands/BMW/listings",
+            "description": "Alle aktive listings for et specifikt brand. Traverserer Brand←MADE_BY←Model←IS_MODEL←Car←LISTS_CAR←CarListing."
+          }
+        },
+        {
+          "name": "Listings for Toyota",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/brands/Toyota/listings",
+            "description": "Alle aktive Toyota-listings. Samme graf-traversal som BMW, bare med andet brand-navn."
+          }
+        },
+        {
+          "name": "Listings i Hovedstaden",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/regions/Hovedstaden/listings",
+            "description": "Listings i en region. Traverserer Region←IN_REGION←Address←LOCATED_AT←CarListing og joiner med Car/Model/Brand."
+          }
+        },
+        {
+          "name": "Listings i Midtjylland",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/regions/Midtjylland/listings",
+            "description": "Samme region-traversal for Midtjylland."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Bruger favorites (user 22)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/users/22/favorites",
+            "description": "Henter brugerens favoritter via FAVORITED-relationen. Traverserer User→FAVORITED→CarListing→Car→Model→Brand."
+          }
+        },
+        {
+          "name": "Bruger beskeder (user 22)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/users/22/messages",
+            "description": "Alle beskeder sendt og modtaget af brugeren. Bruger Message→SENT_BY og Message→RECEIVED_BY relationer."
+          }
+        },
+        {
+          "name": "Anbefalinger for bruger (user 22)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/users/22/recommendations",
+            "description": "COLLABORATIVE FILTERING via graf: 'Brugere der favoriserede samme listings som dig, favoriserede også disse.' Klassisk graf-recommendation der kræver multi-hop traversal i Cypher."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Statistik",
+      "item": [
+        {
+          "name": "Populære brands",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/neo4j/stats/popular-brands",
+            "description": "Top brands sorteret efter antal favorites og listings. Aggregerer på tværs af Brand←Model←Car←CarListing←FAVORITED."
+          }
+        }
+      ]
+    }
+  ]
+}
