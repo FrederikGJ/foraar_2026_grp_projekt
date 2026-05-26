@@ -56,7 +56,7 @@ public class Main {
         mongo.getCollection("listings").createIndex(
                 new org.bson.Document("createdAt", 1),
                 new com.mongodb.client.model.IndexOptions()
-                        .expireAfter(1576800000L, java.util.concurrent.TimeUnit.SECONDS)
+                        .expireAfter(157680000L, java.util.concurrent.TimeUnit.SECONDS)
                         .partialFilterExpression(new org.bson.Document("soldAt", null))
         );
 
