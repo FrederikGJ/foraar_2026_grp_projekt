@@ -1,0 +1,432 @@
+{
+  "info": {
+    "name": "Bilbase MongoDB API",
+    "description": "Demo-collection til Bilbase MongoDB backend.\nViser document-database operationer: embedded documents, dot-notation queries, $regex filtrering, partielle $set updates og atomisk single-document write.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Listings – CRUD",
+      "description": "Fuld CRUD på listings-collection. Hvert listing-dokument indeholder embedded sub-documents (car, seller, address) — alt i ét dokument, ingen JOINs.",
+      "item": [
+        {
+          "name": "Alle aktive listings (pagineret)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?page=0&size=5&sort=createdAt,desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "page",  "value": "0" },
+                { "key": "size",  "value": "5" },
+                { "key": "sort",  "value": "createdAt,desc" }
+              ]
+            },
+            "description": "Henter aktive listings (soldAt == null) med Spring Data pagination. MongoDB bruger skip/limit internt. Returnerer Page-objekt med content[], totalElements, totalPages m.m."
+          }
+        },
+        {
+          "name": "Listing detaljer (by id)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/listings/listing_1",
+            "description": "Henter ét komplet listing-dokument. Hele dokumentet med embedded car, seller og address returneres i ét opslag — ingen JOINs nødvendige."
+          }
+        },
+        {
+          "name": "Opret ny listing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('createdListingId', json.id);",
+                  "    console.log('Saved createdListingId: ' + json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/listings",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sellerId\": \"user_1\",\n  \"brand\": \"Volkswagen\",\n  \"model\": \"Golf\",\n  \"fuelType\": \"Benzin\",\n  \"year\": 2021,\n  \"mileageKm\": 34000,\n  \"color\": \"Grå\",\n  \"price\": 189000,\n  \"street\": \"Vesterbrogade 42\",\n  \"postalCode\": \"1620\",\n  \"city\": \"København V\",\n  \"region\": \"Hovedstaden\",\n  \"description\": \"Velholdt Golf med servicehistorik.\"\n}"
+            },
+            "description": "ATOMISK SINGLE-DOCUMENT WRITE: Opretter et listing med embedded car, seller og address i ét dokument. MongoDB's single-document write er atomisk by design — ingen transaktion nødvendig.\n\nTest-scriptet gemmer det oprettede listing-id i variablen {{createdListingId}}, som bruges af Update og Delete requests."
+          }
+        },
+        {
+          "name": "Opdater oprettet listing (partiel $set)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/listings/{{createdListingId}}",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 175000,\n  \"description\": \"Nedsat pris! Skal væk inden weekend.\",\n  \"city\": \"Aarhus C\",\n  \"region\": \"Midtjylland\"\n}"
+            },
+            "description": "PARTIEL UPDATE MED $set: Kun de felter der sendes med bliver opdateret. Backend bruger MongoTemplate.updateFirst() med $set operator — f.eks. $set: { 'car.price': 175000, 'address.city': 'Aarhus C' }. DOT-NOTATION tillader opdatering af nested felter uden at overskrive hele embedded dokumentet.\n\nBruger {{createdListingId}} fra POST-requesten."
+          }
+        },
+        {
+          "name": "Slet oprettet listing",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/listings/{{createdListingId}}",
+            "description": "Hard delete af det listing vi selv oprettede. Afvises med 409 Conflict hvis der eksisterer en sale-record (applikationslaget håndhæver referentiel integritet — MongoDB har ingen FK-constraints).\n\nBruger {{createdListingId}} fra POST-requesten, så vi kun sletter vores eget testdata."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listings – Filtrering (dot-notation & $regex)",
+      "description": "Demonstrerer MongoDB's dot-notation til at query ind i embedded sub-documents og $regex med case-insensitive option.",
+      "item": [
+        {
+          "name": "Filtrer på brand ($regex, case-insensitive)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?brand=toyota&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "brand", "value": "toyota" },
+                { "key": "page",  "value": "0" },
+                { "key": "size",  "value": "10" }
+              ]
+            },
+            "description": "QUERY MED DOT-NOTATION + $regex: Backend bygger Criteria.where('car.brand').regex('toyota', 'i'). Dot-notationen 'car.brand' navigerer ned i det embedded car-dokument. $regex med 'i' flag gør søgning case-insensitive. Bemærk lowercase 'toyota' matcher 'Toyota'."
+          }
+        },
+        {
+          "name": "Filtrer på model",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?model=corolla&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "model", "value": "corolla" },
+                { "key": "page",  "value": "0" },
+                { "key": "size",  "value": "10" }
+              ]
+            },
+            "description": "Filtrerer på car.model med $regex. Dot-notation query ind i embedded document."
+          }
+        },
+        {
+          "name": "Filtrer på region",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?region=Hovedstaden&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "region", "value": "Hovedstaden" },
+                { "key": "page",   "value": "0" },
+                { "key": "size",   "value": "10" }
+              ]
+            },
+            "description": "Filtrerer på address.region. Endnu et eksempel på dot-notation query ind i et nested embedded dokument."
+          }
+        },
+        {
+          "name": "Filtrer på brændstof",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?fuelType=Diesel&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "fuelType", "value": "Diesel" },
+                { "key": "page",     "value": "0" },
+                { "key": "size",     "value": "10" }
+              ]
+            },
+            "description": "Filtrerer på car.fuelType med $regex."
+          }
+        },
+        {
+          "name": "Prisinterval ($gte / $lte)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?priceFrom=50000&priceTo=200000&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "priceFrom", "value": "50000" },
+                { "key": "priceTo",   "value": "200000" },
+                { "key": "page",      "value": "0" },
+                { "key": "size",      "value": "10" }
+              ]
+            },
+            "description": "RANGE QUERY MED $gte/$lte: Backend bygger Criteria.where('car.price').gte(50000) og .lte(200000). MongoDB's comparison operators arbejder direkte på nested felter via dot-notation."
+          }
+        },
+        {
+          "name": "Årgangsinterval ($gte / $lte)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?yearFrom=2018&yearTo=2023&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "yearFrom", "value": "2018" },
+                { "key": "yearTo",   "value": "2023" },
+                { "key": "page",     "value": "0" },
+                { "key": "size",     "value": "10" }
+              ]
+            },
+            "description": "Range-query på car.year. Kombinerer $gte og $lte på et embedded numerisk felt."
+          }
+        },
+        {
+          "name": "Kombineret filter (brand + region + pris)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?brand=BMW&region=Hovedstaden&priceFrom=100000&priceTo=500000&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "brand",     "value": "BMW" },
+                { "key": "region",    "value": "Hovedstaden" },
+                { "key": "priceFrom", "value": "100000" },
+                { "key": "priceTo",   "value": "500000" },
+                { "key": "page",      "value": "0" },
+                { "key": "size",      "value": "10" }
+              ]
+            },
+            "description": "$and KOMBINATION: Backend bygger en Criteria med andOperator() — alle filtre kombineres med $and. Querier på tværs af to forskellige embedded documents (car.brand OG address.region OG car.price) i én collection-scan."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "Bruger-documents med embedded favorites-array (liste af listing-id'er).",
+      "item": [
+        {
+          "name": "Alle brugere",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users",
+            "description": "Henter alle user-documents. Hvert dokument indeholder et embedded favorites-array med listing-id'er — et typisk MongoDB-mønster hvor relationer kan modelleres som arrays i dokumentet."
+          }
+        },
+        {
+          "name": "Bruger detaljer",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/user_1",
+            "description": "Henter ét user-dokument inkl. embedded favorites-array. String-baseret _id ('user_1') i stedet for auto-increment integer."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "description": "Besked-documents med reference-id'er (senderId, receiverId, listingId). MongoDB har ingen FK-constraints — referentiel integritet håndteres i applikationslaget.",
+      "item": [
+        {
+          "name": "Inbox (modtagne beskeder)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/messages/inbox?userId=user_2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "messages", "inbox"],
+              "query": [
+                { "key": "userId", "value": "user_2" }
+              ]
+            },
+            "description": "Finder beskeder hvor receiverId matcher. Sorteret efter sentAt desc. Spring Data MongoDB genererer query automatisk fra metodenavnet: findByReceiverIdOrderBySentAtDesc."
+          }
+        },
+        {
+          "name": "Outbox (sendte beskeder)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/messages/outbox?userId=user_22",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "messages", "outbox"],
+              "query": [
+                { "key": "userId", "value": "user_22" }
+              ]
+            },
+            "description": "Finder beskeder hvor senderId matcher. Spring Data MongoDB genererer automatisk query fra metodenavnet: findBySenderIdOrderBySentAtDesc."
+          }
+        },
+        {
+          "name": "Beskeder for listing",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/messages/listing/listing_1",
+            "description": "Alle beskeder tilknyttet et specifikt listing, sorteret kronologisk (sentAt asc). Bruger listingId som reference-felt — ingen FK-constraints i MongoDB."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "description": "Salgs-documents med embedded snapshot af bil-data på salgstidspunktet.",
+      "item": [
+        {
+          "name": "Køb for bruger",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/sales?buyerId=user_22",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales"],
+              "query": [
+                { "key": "buyerId", "value": "user_22" }
+              ]
+            },
+            "description": "Finder salg for en køber. Sale-dokumentet indeholder en embedded snapshot (brand, model, year, price, sellerUsername) — data som de så ud på salgstidspunktet, uændret selvom listing-dokumentet senere opdateres eller slettes."
+          }
+        },
+        {
+          "name": "Salg for listing",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sales/listing/listing_1",
+            "description": "Finder salg tilknyttet et specifikt listing. Returnerer 404 hvis listing ikke er solgt endnu."
+          }
+        }
+      ]
+    },
+    {
+      "name": "MongoDB-specifikt",
+      "description": "Requests der tydeligt illustrerer MongoDB-specifikke mønstre og features: embedded documents, dot-notation, $set, snapshot-pattern og atomiske writes.",
+      "item": [
+        {
+          "name": "Embedded documents: Alt i ét dokument",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/listings/listing_1",
+            "description": "EMBEDDED DOCUMENTS: Listing-dokumentet indeholder car, seller og address som nested sub-documents.\nMongoDB query: db.listings.findOne({_id: 'listing_1'})\nÉt opslag returnerer alt — ingen JOINs. Trade-off: hurtigere reads, men data-duplikering (f.eks. brand-navn gentages i hvert listing)."
+          }
+        },
+        {
+          "name": "Dot-notation: Query ind i nested docs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?brand=Toyota&region=Midtjylland",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings"],
+              "query": [
+                { "key": "brand",  "value": "Toyota" },
+                { "key": "region", "value": "Midtjylland" }
+              ]
+            },
+            "description": "DOT-NOTATION: MongoDB kan query direkte ind i embedded documents med dot-notation.\nMongoDB query: db.listings.find({ 'car.brand': /Toyota/i, 'address.region': /Midtjylland/i, soldAt: null })\n'car.brand' og 'address.region' navigerer ned i nested sub-documents uden at behøve separate collections."
+          }
+        },
+        {
+          "name": "Atomisk single-document write",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('mongoSpecifikListingId', json.id);",
+                  "    console.log('Saved mongoSpecifikListingId: ' + json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/listings",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sellerId\": \"user_2\",\n  \"brand\": \"Peugeot\",\n  \"model\": \"208\",\n  \"fuelType\": \"El\",\n  \"year\": 2023,\n  \"mileageKm\": 12000,\n  \"color\": \"Hvid\",\n  \"price\": 229000,\n  \"street\": \"Algade 15\",\n  \"postalCode\": \"4000\",\n  \"city\": \"Roskilde\",\n  \"region\": \"Sjælland\",\n  \"description\": \"Elbil med lavt kilometertal.\"\n}"
+            },
+            "description": "ATOMISK WRITE: Alle relaterede data (car, seller, address) skrives som ét dokument.\nMongoDB query: db.listings.insertOne({...})\nI MongoDB er single-document writes altid atomiske — ingen transaktion nødvendig. Alt-eller-intet garanti uden BEGIN/COMMIT.\n\nTest-scriptet gemmer id'et i {{mongoSpecifikListingId}} til brug af Delete-guard requesten."
+          }
+        },
+        {
+          "name": "Partiel $set update med dot-notation",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/listings/{{mongoSpecifikListingId}}",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 145000,\n  \"mileageKm\": 95000\n}"
+            },
+            "description": "$set OPERATOR MED DOT-NOTATION: Opdaterer kun de angivne felter — resten af dokumentet forbliver uændret.\nMongoDB query: db.listings.updateOne({_id: '...'}, {$set: {'car.price': 145000, 'car.mileageKm': 95000}})\nDot-notation gør det muligt at opdatere specifikke felter dybt inde i embedded documents uden at overskrive hele sub-dokumentet.\n\nBruger {{mongoSpecifikListingId}} fra POST-requesten — kør 'Atomisk single-document write' først."
+          }
+        },
+        {
+          "name": "Snapshot-pattern: Denormaliseret historik",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/sales?buyerId=user_22",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales"],
+              "query": [
+                { "key": "buyerId", "value": "user_22" }
+              ]
+            },
+            "description": "SNAPSHOT-PATTERN: Sale-dokumentet indeholder en embedded 'snapshot' med brand, model, year, price og sellerUsername kopieret på salgstidspunktet.\nEt klassisk MongoDB denormaliseringsmønster: data der skal bevares historisk kopieres ind i dokumentet. Selv hvis listing-dokumentet ændrer pris eller slettes, forbliver snapshot uændret."
+          }
+        },
+        {
+          "name": "Referentiel integritet uden FK: Delete-guard",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/listings/{{mongoSpecifikListingId}}",
+            "description": "INGEN FK-CONSTRAINTS: MongoDB har ingen foreign keys. Applikationslaget tjekker manuelt om en sale-record eksisterer før sletning — returnerer 409 Conflict hvis ja.\nDette svarer til ON DELETE RESTRICT i SQL, men er implementeret i kode i stedet for i databasen.\n\nBruger {{mongoSpecifikListingId}} fra 'Atomisk single-document write' POST-requesten, så vi kun sletter testdata vi selv har oprettet."
+          }
+        }
+      ]
+    }
+  ]
+}
