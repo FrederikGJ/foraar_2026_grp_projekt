@@ -2,14 +2,14 @@
 set -e
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
-PIDFILE="$DIR/.pids"
+check_port() {
+  lsof -ti :"$1" >/dev/null 2>&1
+}
 
-if [ -f "$PIDFILE" ]; then
-  echo "Services seem to be running already. Run ./stop.sh first."
+if check_port 8080 || check_port 8081 || check_port 8082 || check_port 3000; then
+  echo "Some services seem to be running already. Run ./stop.sh first."
   exit 1
 fi
-
-> "$PIDFILE"
 
 LOGDIR="$DIR/.logs"
 mkdir -p "$LOGDIR"
@@ -17,26 +17,22 @@ mkdir -p "$LOGDIR"
 echo "Starting backend (port 8080)..."
 cd "$DIR/backend"
 mvn -q spring-boot:run > "$LOGDIR/backend.log" 2>&1 &
-echo "backend=$!" >> "$PIDFILE"
-echo "  backend started with PID $!"
+echo "  backend starting..."
 
 echo "Starting backend_neo4j (port 8081)..."
 cd "$DIR/backend_neo4j"
 mvn -q spring-boot:run > "$LOGDIR/backend_neo4j.log" 2>&1 &
-echo "backend_neo4j=$!" >> "$PIDFILE"
-echo "  backend_neo4j started with PID $!"
+echo "  backend_neo4j starting..."
 
 echo "Starting mongodb_backend (port 8082)..."
 cd "$DIR/mongodb/mongodb_backend"
 mvn -q spring-boot:run -Dspring-boot.run.arguments=--server.port=8082 > "$LOGDIR/mongodb_backend.log" 2>&1 &
-echo "mongodb_backend=$!" >> "$PIDFILE"
-echo "  mongodb_backend started with PID $!"
+echo "  mongodb_backend starting..."
 
 echo "Starting frontend (port 3000)..."
 cd "$DIR/frontend"
 python3 -m http.server 3000 > "$LOGDIR/frontend.log" 2>&1 &
-echo "frontend=$!" >> "$PIDFILE"
-echo "  frontend started with PID $!"
+echo "  frontend starting..."
 
 echo ""
 echo "All services started:"
