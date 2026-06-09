@@ -12,3 +12,6 @@
 /dataSources/
 /dataSources.local.xml
 **/migration.properties
+
+# pids 
+.pids
