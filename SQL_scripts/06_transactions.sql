@@ -45,35 +45,8 @@ END$$
 
 DELIMITER ;
 
--- EXAMPLES
--- Successful
-CALL create_car_listing(
-    2,
-    1,
-    'Testvej 123',
-    '2100',
-    'København Ø',
-    11,
-    4,
-    279900.00,
-    2020,
-    52000,
-    'Sort',
-    'Tesla Model 3, velholdt, klar til levering.'
-);
-
--- Fail (FK fails because seller_id does not exist in app_user)
-CALL create_car_listing(
-    999999,
-    1,
-    'Failvej 1',
-    '2100',
-    'København Ø',
-    11,
-    4,
-    279900.00,
-    2020,
-    52000,
-    'Sort',
-    'This should fail because seller_id is invalid.'
-);
+-- EXAMPLES (kun til manuel test — kør IKKE under init)
+-- Successful:
+--   CALL create_car_listing(2, 1, 'Testvej 123', '2100', 'København Ø', 11, 4, 279900.00, 2020, 52000, 'Sort', 'Tesla Model 3, velholdt, klar til levering.');
+-- Fail (FK fails because seller_id does not exist in app_user):
+--   CALL create_car_listing(999999, 1, 'Failvej 1', '2100', 'København Ø', 11, 4, 279900.00, 2020, 52000, 'Sort', 'This should fail because seller_id is invalid.');
